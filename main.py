@@ -596,7 +596,8 @@ window.save = function(){
 
     html = html.replace("<script>", script_inject + "<script>", 1)
 
-    pwa_meta = """<script>
+    pwa_meta = """<link rel="manifest" href="/static/manifest.json">
+<script>
 if('serviceWorker' in navigator) {
   navigator.serviceWorker.register('/static/sw.js').catch(function(){});
 }
