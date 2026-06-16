@@ -1,0 +1,1044 @@
+﻿<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>太平洋产险 · 渠道数据分析与销售管理系统</title>
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{--blue:#2563eb;--blue-light:#dbeafe;--blue-dark:#1d4ed8;--teal:#0d9488;--teal-light:#ccfbf1;--amber:#d97706;--amber-light:#fef3c7;--violet:#7c3aed;--violet-light:#ede9fe;--rose:#e11d48;--rose-light:#ffe4e6;--emerald:#059669;--emerald-light:#d1fae5;--slate-50:#f8fafc;--slate-100:#f1f5f9;--slate-200:#e2e8f0;--slate-300:#cbd5e1;--slate-400:#94a3b8;--slate-500:#64748b;--slate-600:#475569;--slate-700:#334155;--slate-800:#1e293b;--slate-900:#0f172a;--radius:12px;--radius-sm:8px;--radius-xs:6px;--shadow:0 1px 3px rgba(0,0,0,.06),0 1px 2px rgba(0,0,0,.04);--shadow-md:0 4px 16px rgba(0,0,0,.08);--transition:.25s cubic-bezier(.4,0,.2,1)}
+body{font-family:'Noto Sans SC','PingFang SC','Microsoft YaHei',system-ui,sans-serif;background:linear-gradient(135deg,#f0f4f8 0%,#e6edf5 50%,#f8fafc 100%);min-height:100vh;color:var(--slate-800);padding:0}
+.app{max-width:1440px;margin:0 auto;padding:20px}
+.header{display:flex;align-items:center;justify-content:space-between;padding:16px 24px;background:rgba(255,255,255,.85);backdrop-filter:blur(16px);border-radius:var(--radius);box-shadow:var(--shadow);margin-bottom:20px;border:1px solid rgba(255,255,255,.6)}
+.header-left{display:flex;align-items:center;gap:12px}
+.header-icon{width:40px;height:40px;border-radius:10px;background:linear-gradient(135deg,var(--blue),#1d4ed8);display:flex;align-items:center;justify-content:center;color:#fff;font-size:18px;font-weight:800;letter-spacing:1px}
+.header h1{font-size:18px;font-weight:700;color:var(--slate-900);line-height:1.2}
+.header h1 small{font-size:12px;font-weight:400;color:var(--slate-400);display:block}
+.header-info{display:flex;align-items:center;gap:10px;font-size:13px;color:var(--slate-500)}
+.badge{display:inline-block;font-size:11px;font-weight:600;padding:2px 10px;border-radius:20px;background:var(--blue-light);color:var(--blue)}
+.btn{padding:7px 16px;border-radius:var(--radius-xs);border:none;font-size:12px;font-weight:600;cursor:pointer;transition:all var(--transition);display:inline-flex;align-items:center;gap:5px;font-family:inherit}
+.btn-primary{background:var(--blue);color:#fff}
+.btn-primary:hover{background:var(--blue-dark)}
+.btn-outline{background:transparent;color:var(--slate-600);border:1px solid var(--slate-300)}
+.btn-outline:hover{background:var(--slate-100)}
+.btn-sm{padding:5px 12px;font-size:11px}
+.btn-danger{background:var(--rose);color:#fff}
+.btn-danger:hover{background:#be123c}
+.btn-success{background:var(--emerald);color:#fff}
+.tab-bar{display:flex;gap:2px;background:var(--slate-100);padding:3px;border-radius:var(--radius-sm);margin-bottom:20px;overflow-x:auto;flex-wrap:wrap}
+.tab-btn{padding:8px 16px;border:none;background:transparent;font-size:12px;font-weight:600;color:var(--slate-500);border-radius:6px;cursor:pointer;transition:all var(--transition);white-space:nowrap;font-family:inherit}
+.tab-btn:hover{color:var(--slate-700)}
+.tab-btn.active{background:#fff;color:var(--slate-900);box-shadow:var(--shadow)}
+.tab-content{display:none}.tab-content.active{display:block}
+.card{background:#fff;border-radius:var(--radius);padding:20px 24px;box-shadow:var(--shadow);border:1px solid var(--slate-100);margin-bottom:20px}
+.card-title{font-size:14px;font-weight:700;color:var(--slate-800);margin-bottom:14px;display:flex;align-items:center;gap:8px}
+.card-row{display:grid;gap:20px}
+.cols-2{grid-template-columns:1fr 1fr}
+.cols-3{grid-template-columns:1fr 1fr 1fr}
+.cols-4{grid-template-columns:repeat(4,1fr)}
+.kpi-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:14px;margin-bottom:20px}
+.kpi-item{background:#fff;border-radius:var(--radius);padding:16px 18px;box-shadow:var(--shadow);border:1px solid var(--slate-100);position:relative;overflow:hidden}
+.kpi-item .lbl{font-size:11px;font-weight:600;color:var(--slate-400);text-transform:uppercase;letter-spacing:.3px;margin-bottom:2px}
+.kpi-item .val{font-size:22px;font-weight:800;color:var(--slate-900)}
+.kpi-item .sub{font-size:11px;color:var(--slate-500);margin-top:2px}
+.kpi-item .sub .up{color:var(--emerald);font-weight:600}
+.kpi-item .sub .down{color:#dc2626;font-weight:600}
+.kpi-item .bar-top{position:absolute;top:0;left:0;right:0;height:3px}
+.data-table{width:100%;border-collapse:collapse;font-size:12px}
+.data-table th{text-align:left;font-size:10px;font-weight:600;color:var(--slate-400);padding:8px;border-bottom:2px solid var(--slate-200);text-transform:uppercase;letter-spacing:.3px}
+.data-table td{padding:7px 8px;border-bottom:1px solid var(--slate-100);color:var(--slate-600)}
+.data-table tr:hover td{background:var(--slate-50)}
+.data-table .num{font-weight:600;font-variant-numeric:tabular-nums}
+.data-table .up{color:var(--emerald);font-weight:600}
+.data-table .down{color:#dc2626;font-weight:600}
+.table-wrap{overflow-x:auto}
+.chart-box{position:relative;width:100%;height:260px}
+.chart-box canvas{width:100%;height:100%}
+.form-group{margin-bottom:12px}
+.form-group label{display:block;font-size:12px;font-weight:600;color:var(--slate-600);margin-bottom:4px}
+.form-group input,.form-group select,.form-group textarea{width:100%;padding:8px 12px;border-radius:6px;border:1px solid var(--slate-200);font-size:13px;font-family:inherit;background:#fff;transition:border-color var(--transition)}
+.form-group input:focus,.form-group select:focus,.form-group textarea:focus{outline:none;border-color:var(--blue)}
+.form-group textarea{min-height:60px;resize:vertical}
+.form-row{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.data-list{list-style:none;padding:0}
+.data-list li{display:flex;justify-content:space-between;align-items:center;padding:10px 0;border-bottom:1px solid var(--slate-100)}
+.data-list li:last-child{border:none}
+.data-list .info{flex:1}
+.data-list .info .name{font-size:13px;font-weight:600;color:var(--slate-800)}
+.data-list .info .meta{font-size:11px;color:var(--slate-400);margin-top:2px}
+.data-list .actions{display:flex;gap:6px}
+.status{display:inline-block;font-size:10px;font-weight:600;padding:2px 8px;border-radius:20px}
+.status-active{background:var(--emerald-light);color:var(--emerald)}
+.status-pending{background:var(--amber-light);color:var(--amber)}
+.status-done{background:var(--blue-light);color:var(--blue)}
+.status-lost{background:var(--rose-light);color:var(--rose)}
+.modal-overlay{position:fixed;top:0;left:0;right:0;bottom:0;background:rgba(0,0,0,.3);z-index:1000;display:none;align-items:center;justify-content:center;backdrop-filter:blur(4px)}
+.modal-overlay.open{display:flex}
+.modal{background:#fff;border-radius:var(--radius);padding:24px;width:540px;max-width:92vw;max-height:85vh;overflow-y:auto;box-shadow:0 8px 32px rgba(0,0,0,.12)}
+.modal h3{font-size:16px;font-weight:700;margin-bottom:16px}
+.modal-close{float:right;background:none;border:none;font-size:18px;cursor:pointer;color:var(--slate-400)}
+.modal-close:hover{color:var(--slate-600)}
+.search-bar{display:flex;gap:8px;margin-bottom:14px;flex-wrap:wrap}
+.search-bar input{flex:1;min-width:160px;padding:7px 12px;border-radius:6px;border:1px solid var(--slate-200);font-size:13px;font-family:inherit}
+.search-bar input:focus{outline:none;border-color:var(--blue)}
+.group-tag{display:inline-block;font-size:10px;font-weight:600;padding:2px 8px;border-radius:20px;margin-left:6px}
+.group-农商行{background:var(--blue-light);color:var(--blue)}
+.group-邮政{background:var(--amber-light);color:var(--amber)}
+.group-寿险{background:var(--teal-light);color:var(--teal)}
+.group-银行{background:var(--violet-light);color:var(--violet)}
+.group-个代{background:var(--rose-light);color:var(--rose)}
+.empty-state{text-align:center;padding:32px;color:var(--slate-400);font-size:13px}
+.summary-box{background:var(--slate-50);border-radius:var(--radius-sm);padding:14px 16px;margin-bottom:14px;font-size:13px;line-height:1.7;color:var(--slate-600)}
+.summary-box strong{color:var(--slate-800)}
+.summary-box .hl{color:var(--blue);font-weight:600}
+@media(max-width:768px){.app{padding:12px}.cols-2,.cols-3,.cols-4{grid-template-columns:1fr}.header{flex-direction:column;align-items:flex-start;gap:8px;padding:14px 16px}.kpi-grid{grid-template-columns:repeat(2,1fr)}.form-row{grid-template-columns:1fr}.tab-btn{padding:6px 10px;font-size:11px}}
+</style>
+</head>
+<body>
+<div class="app" id="app">
+<div class="header">
+  <div class="header-left">
+    <div class="header-icon">P</div>
+    <div>
+      <h1>太平洋产险<small>渠道数据分析 · 销售管理系统</small></h1>
+    </div>
+  </div>
+  <div class="header-info">
+    <span class="badge" id="headerGroup">农商行</span>
+    <span id="headerDate"></span>
+    <button class="btn btn-outline btn-sm" onclick="showDataImport()">📜 导入数据</button>
+    <button class="btn btn-outline btn-sm" onclick="exportAllData()">📛 导出</button>
+  </div>
+</div>
+<div class="tab-bar">
+  <button class="tab-btn active" onclick="switchTab('analyze')">📊 数据分析</button>
+  <button class="tab-btn" onclick="switchTab('visit')">📵 拜访管理</button>
+  <button class="tab-btn" onclick="switchTab('lead')">🎆 意向客户</button>
+  <button class="tab-btn" onclick="switchTab('customer')">🙃 客户管理</button>
+  <button class="tab-btn" onclick="switchTab('team')">🙁 团队看板</button>
+  <button class="tab-btn" onclick="switchTab('setting')">⚙ 设置</button>
+</div>
+<div class="tab-content active" id="tab-analyze">
+  <div class="card">
+    <div class="card-title">选择分析客群</div>
+    <div style="display:flex;gap:6px;flex-wrap:wrap" id="groupSelector"></div>
+  </div>
+  <div class="kpi-grid" id="kpiGrid"></div>
+  <div class="card">
+    <div class="card-title">核心变化说明</div>
+    <div class="summary-box" id="coreSummary">数据加载中...</div>
+  </div>
+  <div class="card-row cols-2">
+    <div class="card">
+      <div class="card-title">险种大类对比</div>
+      <div class="table-wrap"><table class="data-table" id="categoryTable"></table></div>
+    </div>
+    <div class="card">
+      <div class="card-title">2026年险种保费占比</div>
+      <div class="chart-box"><canvas id="pieChart"></canvas></div>
+    </div>
+  </div>
+  <div class="card">
+    <div class="card-title">热门险种TOP10 2025 vs 2026</div>
+    <div class="card-row cols-2">
+      <div class="table-wrap" id="top2025Container"></div>
+      <div class="table-wrap" id="top2026Container"></div>
+    </div>
+  </div>
+  <div class="card">
+    <div class="card-title">月度保费趋势</div>
+    <div class="chart-box" style="height:280px"><canvas id="trendChart"></canvas></div>
+  </div>
+  <div class="card-row cols-2">
+    <div class="card">
+      <div class="card-title">对接人员业绩</div>
+      <div class="table-wrap" style="max-height:320px;overflow-y:auto"><table class="data-table" id="agentTable"></table></div>
+    </div>
+    <div class="card">
+      <div class="card-title">部门业绩对比</div>
+      <div class="table-wrap" style="max-height:320px;overflow-y:auto"><table class="data-table" id="deptTable"></table></div>
+    </div>
+  </div>
+</div>
+<div class="tab-content" id="tab-visit">
+  <div class="card">
+    <div class="card-title">今日拜访统计</div>
+    <div class="kpi-grid" id="visitKpi"></div>
+  </div>
+  <div class="card">
+    <div class="card-title" style="justify-content:space-between">
+      <span>拜访记录</span>
+      <button class="btn btn-primary btn-sm" onclick="openVisitForm()">+ 新增拜访</button>
+    </div>
+    <div class="search-bar">
+      <input type="text" id="visitSearch" placeholder="搜索客户、人员..." oninput="renderVisitList()">
+      <select id="visitFilter" onchange="renderVisitList()" style="padding:7px 12px;border-radius:6px;border:1px solid var(--slate-200);font-size:12px;font-family:inherit">
+        <option value="all">全部状态</option>
+        <option value="已拜访">已拜访</option>
+        <option value="计划中">计划中</option>
+        <option value="已取消">已取消</option>
+      </select>
+      <select id="visitGroupFilter" onchange="renderVisitList()" style="padding:7px 12px;border-radius:6px;border:1px solid var(--slate-200);font-size:12px;font-family:inherit"></select>
+    </div>
+    <div class="table-wrap"><table class="data-table" id="visitTable"></table></div>
+  </div>
+</div>
+<div class="tab-content" id="tab-lead">
+  <div class="card">
+    <div class="card-title" style="justify-content:space-between">
+      <span>意向客户登记 <span class="badge" id="leadCount">0</span></span>
+      <button class="btn btn-primary btn-sm" onclick="openLeadForm()">+ 新增意向</button>
+    </div>
+    <div class="search-bar">
+      <input type="text" id="leadSearch" placeholder="搜索客户名称..." oninput="renderLeadList()">
+      <select id="leadStageFilter" onchange="renderLeadList()" style="padding:7px 12px;border-radius:6px;border:1px solid var(--slate-200);font-size:12px;font-family:inherit">
+        <option value="all">全部阶段</option>
+        <option value="初步接触">初步接触</option>
+        <option value="需求分析">需求分析</option>
+        <option value="方案报价">方案报价</option>
+        <option value="跟进中">跟进中</option>
+        <option value="即将成交">即将成交</option>
+        <option value="已成交">已成交</option>
+        <option value="已流失">已流失</option>
+      </select>
+      <select id="leadGroupFilter" onchange="renderLeadList()" style="padding:7px 12px;border-radius:6px;border:1px solid var(--slate-200);font-size:12px;font-family:inherit"></select>
+    </div>
+    <div id="leadPipeline" style="display:flex;gap:8px;margin-bottom:14px;overflow-x:auto;padding-bottom:4px"></div>
+    <div class="table-wrap"><table class="data-table" id="leadTable"></table></div>
+  </div>
+</div>
+<div class="tab-content" id="tab-customer">
+  <div class="card">
+    <div class="card-title" style="justify-content:space-between">
+      <span>客户列表 <span class="badge" id="customerCount">0</span></span>
+      <button class="btn btn-primary btn-sm" onclick="openCustomerForm()">+ 新增客户</button>
+    </div>
+    <div class="search-bar">
+      <input type="text" id="customerSearch" placeholder="搜索客户名称、联系人..." oninput="renderCustomerList()">
+      <select id="customerGroupFilter" onchange="renderCustomerList()" style="padding:7px 12px;border-radius:6px;border:1px solid var(--slate-200);font-size:12px;font-family:inherit"></select>
+    </div>
+    <div class="table-wrap"><table class="data-table" id="customerTable"></table></div>
+  </div>
+</div>
+<div class="tab-content" id="tab-team">
+  <div class="card">
+    <div class="card-title">团队产能总览</div>
+    <div class="kpi-grid" id="teamKpi"></div>
+  </div>
+  <div class="card-row cols-2">
+    <div class="card">
+      <div class="card-title">渠道保费排名</div>
+      <div class="chart-box"><canvas id="teamBarChart"></canvas></div>
+    </div>
+    <div class="card">
+      <div class="card-title">团队人员排行</div>
+      <div class="table-wrap"><table class="data-table" id="teamRankTable"></table></div>
+    </div>
+  </div>
+  <div class="card">
+    <div class="card-title">近期行动清单</div>
+    <div id="teamActionList"></div>
+  </div>
+</div>
+<div class="tab-content" id="tab-setting">
+  <div class="card">
+    <div class="card-title">客群管理</div>
+    <div class="search-bar">
+      <input type="text" id="newGroupName" placeholder="新客群名称" style="max-width:200px">
+      <button class="btn btn-primary btn-sm" onclick="addGroup()">+ 添加客群</button>
+    </div>
+    <div id="groupList"></div>
+  </div>
+  <div class="card">
+    <div class="card-title">数据管理</div>
+    <div style="display:flex;gap:8px;flex-wrap:wrap">
+      <button class="btn btn-outline" onclick="exportAllData()">📛 导出全部数据 (JSON)</button>
+      <button class="btn btn-outline" onclick="showDataImport()">📜 导入数据</button>
+      <button class="btn btn-outline" onclick="showMultiImport()">🙃 导入员工数据</button>
+      <button class="btn btn-danger" onclick="confirmClear()">🗏 清空所有数据</button>
+    </div>
+    <div style="margin-top:12px;font-size:12px;color:var(--slate-400)">
+      数据存储于浏览器本地，导出后可在其他设备导入使用。
+    </div>
+  </div>
+  <div class="card">
+    <div class="card-title">🙃 员工数据合并</div>
+    <div style="font-size:13px;color:var(--slate-500);margin-bottom:12px;line-height:1.6">
+      把员工从手机端导出的JSON文件全部选中，一键合并到系统。
+      系统会自动识别每个员工的数据并标记来源。
+    </div>
+    <div style="display:flex;gap:8px;flex-wrap:wrap">
+      <input type="file" id="multiImportFile" accept=".json" multiple style="padding:8px;border:1px dashed var(--slate-300);border-radius:6px;font-size:13px;flex:1;min-width:200px">
+      <button class="btn btn-primary" onclick="doMultiImport()">合并导入</button>
+    </div>
+    <div id="multiImportResult" style="margin-top:10px;font-size:12px;color:var(--slate-600)"></div>
+  </div>
+</div>
+</div>
+<div class="modal-overlay" id="visitModal">
+  <div class="modal">
+    <button class="modal-close" onclick="closeModal('visitModal')">✕</button>
+    <h3 id="visitFormTitle">新增拜访</h3>
+    <div class="form-row">
+      <div class="form-group"><label>客户名称</label><input id="vCustomer" placeholder="如：长沙农商行营业部"></div>
+      <div class="form-group"><label>拜访人</label><input id="vPerson" placeholder="经办人姓名"></div>
+    </div>
+    <div class="form-row">
+      <div class="form-group"><label>所属客群</label><select id="vGroup"></select></div>
+      <div class="form-group"><label>拜访日期</label><input id="vDate" type="date"></div>
+    </div>
+    <div class="form-group"><label>拜访内容</label><textarea id="vContent" placeholder="记录重点沟通内容..."></textarea></div>
+    <div class="form-row">
+      <div class="form-group"><label>状态</label><select id="vStatus"><option>计划中</option><option>已拜访</option><option>已取消</option></select></div>
+      <div class="form-group"><label>意向度</label><select id="vInterest"><option value="高">高</option><option value="中" selected>中</option><option value="低">低</option></select></div>
+    </div>
+    <div style="display:flex;gap:8px;justify-content:flex-end;margin-top:16px">
+      <button class="btn btn-outline" onclick="closeModal('visitModal')">取消</button>
+      <button class="btn btn-primary" onclick="saveVisit()">保存</button>
+    </div>
+  </div>
+</div>
+<div class="modal-overlay" id="leadModal">
+  <div class="modal">
+    <button class="modal-close" onclick="closeModal('leadModal')">✕</button>
+    <h3 id="leadFormTitle">新增意向客户</h3>
+    <div class="form-row">
+      <div class="form-group"><label>客户名称</label><input id="lName" placeholder="公司/个人名称"></div>
+      <div class="form-group"><label>联系人</label><input id="lContact" placeholder="联系人姓名"></div>
+    </div>
+    <div class="form-row">
+      <div class="form-group"><label>手机号码</label><input id="lPhone" placeholder="手机号"></div>
+      <div class="form-group"><label>所属客群</label><select id="lGroup"></select></div>
+    </div>
+    <div class="form-group"><label>意向险种</label><input id="lProduct" placeholder="如：意外险、健康险"></div>
+    <div class="form-row">
+      <div class="form-group"><label>预计保费(万)</label><input id="lAmount" type="number" step="0.1" placeholder="0"></div>
+      <div class="form-group"><label>销售阶段</label><select id="lStage"><option>初步接触</option><option>需求分析</option><option>方案报价</option><option>跟进中</option><option>即将成交</option><option>已成交</option><option>已流失</option></select></div>
+    </div>
+    <div class="form-group"><label>备注</label><textarea id="lNote" placeholder="其他信息..."></textarea></div>
+    <div style="display:flex;gap:8px;justify-content:flex-end;margin-top:16px">
+      <button class="btn btn-outline" onclick="closeModal('leadModal')">取消</button>
+      <button class="btn btn-primary" onclick="saveLead()">保存</button>
+    </div>
+  </div>
+</div>
+<div class="modal-overlay" id="customerModal">
+  <div class="modal">
+    <button class="modal-close" onclick="closeModal('customerModal')">✕</button>
+    <h3 id="customerFormTitle">新增客户</h3>
+    <div class="form-row">
+      <div class="form-group"><label>客户名称</label><input id="cName" placeholder="公司/机构名称"></div>
+      <div class="form-group"><label>所属客群</label><select id="cGroup"></select></div>
+    </div>
+    <div class="form-row">
+      <div class="form-group"><label>联系人</label><input id="cContact" placeholder="联系人姓名"></div>
+      <div class="form-group"><label>电话</label><input id="cPhone" placeholder="联系电话"></div>
+    </div>
+    <div class="form-group"><label>地址</label><input id="cAddress" placeholder="详细地址"></div>
+    <div class="form-row">
+      <div class="form-group"><label>标签</label><input id="cTag" placeholder="如：VIP、重点维护"></div>
+      <div class="form-group"><label>备注</label><textarea id="cNote" placeholder="其他信息..."></textarea></div>
+    </div>
+    <div style="display:flex;gap:8px;justify-content:flex-end;margin-top:16px">
+      <button class="btn btn-outline" onclick="closeModal('customerModal')">取消</button>
+      <button class="btn btn-primary" onclick="saveCustomer()">保存</button>
+    </div>
+  </div>
+</div>
+<div class="modal-overlay" id="importModal">
+  <div class="modal">
+    <button class="modal-close" onclick="closeModal('importModal')">✕</button>
+    <h3>导入数据</h3>
+    <div class="form-group"><label>导入模式</label><select id="importMode"><option value="merge">合并（保留现有数据）</option><option value="overwrite">覆盖（替换所有数据）</option></select></div>
+    <div class="form-group"><label>选择文件</label><input type="file" id="importFile" accept=".json"></div>
+    <div style="display:flex;gap:8px;justify-content:flex-end;margin-top:16px">
+      <button class="btn btn-outline" onclick="closeModal('importModal')">取消</button>
+      <button class="btn btn-primary" onclick="doImport()">导入</button>
+    </div>
+  </div>
+</div>
+<div class="modal-overlay" id="confirmModal">
+  <div class="modal">
+    <button class="modal-close" onclick="closeModal('confirmModal')">✕</button>
+    <h3>确认操作</h3>
+    <p id="confirmText" style="font-size:14px;color:var(--slate-600);margin-bottom:16px;line-height:1.6"></p>
+    <div style="display:flex;gap:8px;justify-content:flex-end">
+      <button class="btn btn-outline" onclick="closeModal('confirmModal')">取消</button>
+      <button class="btn btn-danger" id="confirmBtn">确认</button>
+    </div>
+  </div>
+</div>
+
+<script>
+// ======================== DATA ========================
+const ANALYSIS_DATA = {"热门险种TOP10":[["农商行2025年vs2026年热门险种TOP10对比","","","","","","","",""],["","","","","","","","",""],["2025年保费收入TOP10险种","","","","","2026年保费收入TOP10险种","","",""],["险种名称","2025年保费收入","2025年保单数","排名","","险种名称","2026年保费收入","2026年保单数","排名"],["团体住院医疗保险（B款）","1,740,981.72","7","1","","公众责任险","297,735.85","6","1"],["团体住院补充医疗保险","292,035.97","7","2","","团体住院医疗保险（B款）","220,886.44","5","2"],["团体人身意外伤害保险（2013版）","280,237.54","9","3","","中国太平洋财产保险股份有限公司个人人身意外伤害保险(2023版)","215,060.71","561","3"],["雇主责任险","44,447.81","3","4","","雇主责任险","37,469.10","5","4"],["财产保险综合险","20,675.45","2","5","","个人医疗保险(H2022)","36,406.00","61","5"],["公众责任险","15,250.94","3","6","","建筑工程施工人员团体人身意外伤害保险（2013版）","34,630.19","3","6"],["个人医疗保险(H2022)","15,022.00","39","7","","借款人人身意外伤害保险A款（2022版）","23,397.15","50","7"],["“全能卫士”家庭综合保险条款","8,232.15","47","8","","中国太平洋财产保险股份有限公司房屋建设责任保险","23,361.33","10","8"],["借款人人身意外伤害保险A款（2022版）","3,141.52","8","9","","团体住院补充医疗保险","16,359.77","5","9"],["食品安全责任保险（2020版）","1,132.08","1","10","","财产保险综合险","11,365.64","1","10"]],"对接人员分析":[["农商行2025年vs2026年对接人员业绩对比分析","","","","","","","","",""],["","","","","","","","","",""],["经办人名称","所属部门","2025年保费收入","2025年保单数","2026年保费收入","2026年保单数","保费同比变化额","保费同比增长率","",""],["何斯琪","公司业务部","12,883.82","38","33,442.85","38","20,559.03","159.57%","",""],["何斯琪","长沙中心支公司本部","3,127.00","7","377,445.21","108","374,318.21","11970.52%","",""],["冯羽仪","芙蓉支公司","471.00","1","1,531.11","4","1,060.11","225.08%","",""],["刘焰彪","雨花支公司","283.00","1","0.00","0","-283.00","-100.00%","",""],["周乐","公司业务部","149.06","1","0.00","0","-149.06","-100.00%","",""],["周源憬","开福支公司","0.00","0","2,709.66","1","2,709.66","","",""],["常青","望城支公司","683.00","1","65,357.94","165","64,674.94","9469.24%","",""],["彭振兴","长沙县支公司","2,312,183.63","28","242,339.16","25","-2,069,844.47","-89.52%","",""],["彭稀","开福支公司","0.00","0","6,339.63","2","6,339.63","","",""],["曾钰泽","天心支公司","2,257.97","9","13,722.47","25","11,464.50","507.73%","",""],["朱建湘","湘江新区支公司","0.00","0","9,768.87","21","9,768.87","","",""],["梁紫璇","雨花支公司","122.64","1","58,395.82","91","58,273.18","47515.64%","",""],["汤玲俐","开福支公司","81,349.68","8","25,681.25","62","-55,668.43","-68.43%","",""],["罗健","公司业务部","2,002.00","1","0.00","0","-2,002.00","-100.00%","",""],["罗健","湘江新区支公司","5,143.44","29","0.00","0","-5,143.44","-100.00%","",""],["罗毓哲","芙蓉支公司","0.00","0","68,324.62","145","68,324.62","","",""],["邓甘璐","天心支公司","0.00","0","18,254.24","23","18,254.24","","",""],["邓甘璐","长沙中心支公司本部","0.00","0","19,619.36","11","19,619.36","","",""],["黄婷","宁乡支公司","736.79","3","0.00","0","-736.79","-100.00%","",""],["合计","","2,421,393.03","128","","721","-1,478,460.84","-259.57%","-2",""]],"核心经营概览":[["农商行2025年vs2026年经营业绩核心对比分析","","","","","","","","","","","",""],["","","","","","","","","","","","",""],["年份","总保费收入","有效保单数","对接人员数","涉及部门数","险种大类数","具体险种数","单均保费","人均产能","同比变化额","同比增长率","保单数同比变化","保单数同比增长率"],["2025","2,421,393.03","128","11","10","5","12","18,917.13","220,126.64","","","",""],["2026","942,932.19","721","12","9","5","15","1,307.81","78,577.68","-1,478,460.84","-61.06%","593","463.28%"],["核心变化说明","","","","","","","","","","","",""],["\n1. 保费规模：2026年总保费收入942,932.19元，较2025年2,421,393.03元，同比变化-61.06%，变化额-1,478,460.84元。\n2. 保单数量：2026年有效保单数721单，较2025年128单，同比变化463.28%，变化额593单。\n3. 人员产能：2026年对接人员数12人，较2025年11人；人均产能78,577.68元，较2025年220,126.64元，同比变化-64.30%。\n4. 产品覆盖：2026年覆盖险种大类5个，具体险种15个，较2025年均有明显拓展。\n","","","","","","","","","","","",""],["","","","","","","","","","","","",""],["","","","","","","","","","","","",""],["","","","","","","","","","","","",""],["","","","","","","","","","","","",""],["","","","","","","","","","","","",""],["","","","","","","","","","","","",""],["","","","","","","","","","","","",""],["","","","","","","","","","","","",""]],"险种大类分析":[["农商行2025年vs2026年险种大类业绩对比分析","","","","","","","","","",""],["","","","","","","","","","",""],["险种大类","2025年保费收入","2025年保单数","2025年保费占比","2026年保费收入","2026年保单数","2026年保费占比","保费同比变化额","保费同比增长率","保单数同比变化","保单数同比增长率"],["企财险","20,864.13","3","0.86%","26,818.69","4","2.84%","5,954.56","28.54%","1","33.33%"],["健康险","2,048,039.69","53","84.58%","273,652.21","71","29.02%","-1,774,387.48","-86.64%","18","33.96%"],["家财险","8,279.32","48","0.34%","532.08","3","0.06%","-7,747.24","-93.57%","-45","-93.75%"],["意外险","283,379.06","17","11.70%","280,325.19","621","29.73%","-3,053.87","-1.08%","604","3552.94%"],["责任险","60,830.83","7","2.51%","361,604.02","22","38.35%","300,773.19","494.44%","15","214.29%"],["合计","2,421,393.03","128","","942,932.19","721","35.50%","-1.00","29481863.00%","0",""]],"月度保费趋势":[["农商行2025年vs2026年月度保费收入趋势对比","","","",""],["","","","",""],["月份","2025年保费收入","2025年保单数","2026年保费收入","2026年保单数"],["1","1,635.80","8","84,994.64","161"],["2","0.00","0","239,226.24","129"],["3","39,790.57","2","490,900.56","275"],["4","2,084.80","7","46,252.65","56"],["5","237,003.30","41","67,640.31","75"],["6","2,652.22","15","13,917.79","25"],["7","6,772.29","2","0.00","0"],["8","19,068.96","19","0.00","0"],["9","2,107,144.45","22","0.00","0"],["10","1,391.00","2","0.00","0"],["11","2,549.00","6","0.00","0"],["12","1,300.64","4","0.00","0"],["合计","2,421,393.03","128","942,932.19","721"]],"部门业绩分析":[["农商行2025年vs2026年各部门业绩对比分析","","","","","","","","","","","",""],["","","","","","","","","","","","",""],["部门名称","2025年保费收入","2025年保单数","2025年对接人员数","2025年保费占比","2025年人均产能","2026年保费收入","2026年保单数","2026年对接人员数","2026年保费占比","2026年人均产能","保费同比变化额","保费同比增长率"],["公司业务部","15,034.88","40","3","0.62%","5,011.63","33,442.85","38","1","3.55%","33,442.85","18,407.97","122.44%"],["天心支公司","2,257.97","9","1","0.09%","2,257.97","31,976.71","48","2","3.39%","15,988.36","29,718.74","1316.17%"],["宁乡支公司","736.79","3","1","0.03%","736.79","0.00","0","0","0.00%","0.00","-736.79","-100.00%"],["开福支公司","81,349.68","8","1","3.36%","81,349.68","34,730.54","65","3","3.68%","11,576.85","-46,619.14","-57.31%"],["望城支公司","683.00","1","1","0.03%","683.00","65,357.94","165","1","6.93%","65,357.94","64,674.94","9469.24%"],["湘江新区支公司","5,143.44","29","1","0.21%","5,143.44","9,768.87","21","1","1.04%","9,768.87","4,625.43","89.93%"],["芙蓉支公司","471.00","1","1","0.02%","471.00","69,855.73","149","2","7.41%","34,927.87","69,384.73","14731.37%"],["长沙中心支公司本部","3,127.00","7","1","0.13%","3,127.00","397,064.57","119","2","42.11%","198,532.29","393,937.57","12597.94%"],["长沙县支公司","2,312,183.63","28","1","95.49%","2,312,183.63","242,339.16","25","1","25.70%","242,339.16","-2,069,844.47","-89.52%"],["雨花支公司","405.64","2","2","0.02%","202.82","58,395.82","91","1","6.19%","58,395.82","57,990.18","14295.97%"],["合计","2,421,393.03","128","13","","2,411,166.96","942,932.19","721","","2.65%","-1.00","",""]]}
+;
+
+// ======================== STATE ========================
+const DEFAULT_GROUPS = ["农商行","邮政","寿险","银行","个代"];
+const state = { groups:[...DEFAULT_GROUPS], activeGroup:"农商行", visits:[], leads:[], customers:[], editId:null };
+function loadState() {
+  try { const s = localStorage.getItem("channelSalesState"); if (s) Object.assign(state, JSON.parse(s)); } catch(e) {}
+}
+function saveState() {
+  try { localStorage.setItem("channelSalesState", JSON.stringify({ groups:state.groups, activeGroup:state.activeGroup, visits:state.visits, leads:state.leads, customers:state.customers })); } catch(e) {}
+}
+function fmt(n) {
+  if (n === undefined || n === null || n === "") return "-";
+  const v = typeof n === "string" ? parseFloat(n.replace(/,/g, "")) : n;
+  if (isNaN(v)) return n;
+  return "¥" + v.toLocaleString("zh-CN", {minimumFractionDigits:2, maximumFractionDigits:2});
+}
+
+function init() { loadState(); populateSelects(); renderAll(); }
+function renderAll() {
+  renderGroupSelector(); renderAnalysis(); drawAnalysisCharts();
+  renderVisitList(); renderLeadList(); renderCustomerList();
+  renderTeamKpi(); drawTeamBarChart(); renderTeamRankings();
+  updateTeamActions(); renderGroupList();
+}
+
+function switchTab(name) {
+  document.querySelectorAll(".tab-btn").forEach(b => b.classList.remove("active"));
+  document.querySelectorAll(".tab-content").forEach(c => c.classList.remove("active"));
+  const map = { analyze:"数据分析", visit:"拜访管理", lead:"意向客户", customer:"客户管理", team:"团队看板", setting:"设置" };
+  const btn = [...document.querySelectorAll(".tab-btn")].find(b => b.textContent.includes(map[name]));
+  if (btn) btn.classList.add("active");
+  document.getElementById("tab-" + name).classList.add("active");
+  if (name === "analyze") drawAnalysisCharts();
+}
+
+function renderGroupSelector() {
+  document.getElementById("groupSelector").innerHTML = state.groups.map(g => {
+    const cls = g === state.activeGroup ? "btn-primary" : "btn-outline";
+    return "<button class=\"btn " + cls + " btn-sm\" onclick=\"selectGroup('" + g + "')\">" + g + "</button>";
+  }).join("");
+}
+function selectGroup(g) { state.activeGroup = g; document.getElementById("headerGroup").textContent = g; renderGroupSelector(); renderAll(); }
+function addGroup() {
+  const name = document.getElementById("newGroupName").value.trim();
+  if (!name) { alert("请输入客群名称"); return; }
+  if (state.groups.includes(name)) { alert("客群已存在"); return; }
+  state.groups.push(name);
+  document.getElementById("newGroupName").value = "";
+  saveState(); renderGroupSelector(); renderGroupList(); populateSelects();
+}
+function removeGroup(name) {
+  if (state.groups.length <= 1) { alert("至少保留一个客群"); return; }
+  if (!confirm('确定删除客群"' + name + '"吗？')) return;
+  state.groups = state.groups.filter(g => g !== name);
+  if (state.activeGroup === name) state.activeGroup = state.groups[0];
+  document.getElementById("headerGroup").textContent = state.activeGroup;
+  saveState(); renderAll(); populateSelects();
+}
+function renderGroupList() {
+  document.getElementById("groupList").innerHTML = state.groups.map(g =>
+    "<div style=\"display:flex;justify-content:space-between;align-items:center;padding:8px 0;border-bottom:1px solid var(--slate-100)\"><span>" + g + "</span><button class=\"btn btn-sm btn-outline\" onclick=\"removeGroup('" + g + "')\" style=\"color:var(--rose)\">删除</button></div>"
+  ).join("");
+}
+
+function renderAnalysis() {
+  const d = ANALYSIS_DATA;
+  if (!d) return;
+  const ov = d["核心经营概览"];
+  if (!ov || ov.length < 6) return;
+  const r25 = ov[3], r26 = ov[4];
+  const kpi = document.getElementById("kpiGrid");
+  kpi.innerHTML = '<div class="kpi-item"><div class="bar-top" style="background:var(--blue)"></div><div class="lbl">2026年总保费</div><div class="val">' + fmt(r26[1]) + '</div><div class="sub">2025年 ' + fmt(r25[1]) + ' <span class="down">' + r26[10] + '</span></div></div>';
+  kpi.innerHTML += '<div class="kpi-item"><div class="bar-top" style="background:var(--teal)"></div><div class="lbl">有效保单数</div><div class="val">' + r26[2] + '</div><div class="sub">2025年 ' + r25[2] + ' <span class="up">+' + r26[12] + '</span></div></div>';
+  kpi.innerHTML += '<div class="kpi-item"><div class="bar-top" style="background:var(--amber)"></div><div class="lbl">对接人员</div><div class="val">' + r26[3] + '人</div><div class="sub">涉及 ' + r26[4] + ' 个部门</div></div>';
+  kpi.innerHTML += '<div class="kpi-item"><div class="bar-top" style="background:var(--violet)"></div><div class="lbl">险种覆盖</div><div class="val">' + r26[6] + '种</div><div class="sub">' + r26[5] + ' 个大类</div></div>';
+  kpi.innerHTML += '<div class="kpi-item"><div class="bar-top" style="background:var(--rose)"></div><div class="lbl">人均产能</div><div class="val">' + fmt(r26[8]) + '</div><div class="sub">2025年 ' + fmt(r25[8]) + ' <span class="down">-64.3%</span></div></div>';
+  document.getElementById("coreSummary").innerHTML = (ov[5] && ov[5][0]) ? ov[5][0].replace(/\n/g, "<br>") : "暂无数据";
+  buildCategoryTable(d);
+  buildTop10Tables(d);
+  buildAgentTable(d);
+  buildDeptTable(d);
+}
+function buildCategoryTable(d) {
+  const cats = d["险种大类分析"];
+  if (!cats || cats.length < 2) return;
+  let html = "<thead><tr>" + cats[0].map(h => "<th>" + h + "</th>").join("") + "</tr></thead><tbody>";
+  for (let i = 1; i < cats.length; i++) {
+    const r = cats[i];
+    html += "<tr>";
+    for (let j = 0; j < r.length; j++) {
+      const v = r[j] || "";
+      const isFirst = j === 0;
+      html += isFirst ? "<td><strong>" + v + "</strong></td>" : "<td>" + v + "</td>";
+    }
+    html += "</tr>";
+  }
+  html += "</tbody>";
+  document.getElementById("categoryTable").innerHTML = html;
+}
+function buildTop10Tables(d) {
+  const t25 = d["热门险种TOP10"];
+  const t26 = d["热门险种TOP10_2026"];
+  if (t25 && t25.length > 1) {
+    let h = '<h4 style="font-size:12px;font-weight:600;color:var(--slate-500);margin-bottom:8px">2025年 TOP10</h4>';
+    h += '<table class="data-table"><thead><tr>' + t25[0].map(hd => "<th>" + hd + "</th>").join("") + '</tr></thead><tbody>';
+    for (let i = 1; i < t25.length; i++) {
+      h += "<tr>" + t25[i].map((c, j) => j === 0 ? "<td><strong>" + c + "</strong></td>" : "<td>" + c + "</td>").join("") + "</tr>";
+    }
+    h += "</tbody></table>";
+    document.getElementById("top2025Container").innerHTML = h;
+  }
+  if (t26 && t26.length > 1) {
+    let h = '<h4 style="font-size:12px;font-weight:600;color:var(--slate-500);margin-bottom:8px">2026年 TOP10</h4>';
+    h += '<table class="data-table"><thead><tr>' + t26[0].map(hd => "<th>" + hd + "</th>").join("") + '</tr></thead><tbody>';
+    for (let i = 1; i < t26.length; i++) {
+      h += "<tr>" + t26[i].map((c, j) => j === 0 ? "<td><strong>" + c + "</strong></td>" : "<td>" + c + "</td>").join("") + "</tr>";
+    }
+    h += "</tbody></table>";
+    document.getElementById("top2026Container").innerHTML = h;
+  }
+}
+function buildAgentTable(d) {
+  const ag = d["对接人员分析"];
+  if (!ag || ag.length < 2) return;
+  let h = "<thead><tr>" + ag[0].filter(h => h).map(hd => "<th>" + hd + "</th>").join("") + "</tr></thead><tbody>";
+  for (let i = 1; i < ag.length; i++) {
+    const r = ag[i];
+    h += "<tr><td><strong>" + r[0] + "</strong></td><td>" + r[1] + "</td>";
+    h += "<td class=\"num\">" + fmt(r[2]) + "</td><td class=\"num\">" + r[3] + "</td>";
+    h += "<td class=\"num\">" + fmt(r[4]) + "</td><td class=\"num\">" + r[5] + "</td>";
+    h += "<td class=\"num\">" + r[7] + "</td></tr>";
+  }
+  h += "</tbody>";
+  document.getElementById("agentTable").innerHTML = h;
+}
+function buildDeptTable(d) {
+  const dp = d["部门业绩分析"];
+  if (!dp || dp.length < 2) return;
+  let h = "<thead><tr><th>部门</th><th>2025保费</th><th>2025单数</th><th>2026保费</th><th>2026单数</th><th>同比变化</th><th>增长率</th></tr></thead><tbody>";
+  for (let i = 1; i < dp.length; i++) {
+    const r = dp[i];
+    h += "<tr><td><strong>" + r[0] + "</strong></td>";
+    h += "<td class=\"num\">" + fmt(r[1]) + "</td><td class=\"num\">" + r[2] + "</td>";
+    h += "<td class=\"num\">" + fmt(r[4]) + "</td><td class=\"num\">" + r[5] + "</td>";
+    h += "<td class=\"num\">" + r[8] + "</td><td class=\"num\">" + (r[9] || "-") + "</td></tr>";
+  }
+  h += "</tbody>";
+  document.getElementById("deptTable").innerHTML = h;
+}
+function drawAnalysisCharts() { drawPie(); drawTrend(); }
+function drawPie() {
+  const canvas = document.getElementById("pieChart");
+  if (!canvas) return;
+  const rect = canvas.parentElement.getBoundingClientRect();
+  const dpr = window.devicePixelRatio || 1;
+  const w = rect.width - 4, h = 260;
+  canvas.width = w * dpr; canvas.height = h * dpr;
+  canvas.style.width = w + "px"; canvas.style.height = h + "px";
+  const ctx = canvas.getContext("2d");
+  ctx.scale(dpr, dpr);
+  ctx.clearRect(0, 0, w, h);
+  const d = ANALYSIS_DATA;
+  if (!d) return;
+  const cats = d["险种大类分析"];
+  if (!cats || cats.length < 2) return;
+  const rows = cats.slice(1).filter(r => r[5] && r[5] !== "");
+  const total = rows.reduce((s, r) => s + parseFloat(String(r[5]).replace(/,/g, "") || 0), 0);
+  if (total === 0) return;
+  const colors = ["#2563eb","#0d9488","#d97706","#7c3aed","#e11d48","#059669"];
+  const cx = w * 0.38, cy = h * 0.48, rd = Math.min(cx, cy) * 0.7;
+  let start = -Math.PI / 2;
+  rows.forEach((row, i) => {
+    const val = parseFloat(String(row[5]).replace(/,/g, "") || 0);
+    const angle = (val / total) * 2 * Math.PI;
+    ctx.beginPath(); ctx.moveTo(cx, cy); ctx.arc(cx, cy, rd, start, start + angle); ctx.closePath();
+    ctx.fillStyle = colors[i % colors.length]; ctx.fill();
+    if (angle > 0.15) {
+      const mid = start + angle / 2;
+      ctx.fillStyle = "#fff"; ctx.font = "bold 12px sans-serif";
+      ctx.textAlign = "center"; ctx.textBaseline = "middle";
+      ctx.fillText((val / total * 100).toFixed(1) + "%", cx + Math.cos(mid) * (rd * 0.65), cy + Math.sin(mid) * (rd * 0.65));
+    }
+    start += angle;
+  });
+  let ly = 10;
+  ctx.textAlign = "left"; ctx.textBaseline = "top"; ctx.font = "11px sans-serif";
+  rows.forEach((row, i) => {
+    const x = w * 0.62;
+    ctx.fillStyle = colors[i % colors.length]; ctx.fillRect(x, ly, 10, 10);
+    ctx.fillStyle = "#475569";
+    ctx.fillText(row[0] + " " + (parseFloat(String(row[5]).replace(/,/g, "") || 0) / total * 100).toFixed(1) + "%", x + 14, ly);
+    ly += 22;
+  });
+}
+function drawTrend() {
+  const canvas = document.getElementById("trendChart");
+  if (!canvas) return;
+  const rect = canvas.parentElement.getBoundingClientRect();
+  const dpr = window.devicePixelRatio || 1;
+  const w = rect.width - 4, h = 280;
+  canvas.width = w * dpr; canvas.height = h * dpr;
+  canvas.style.width = w + "px"; canvas.style.height = h + "px";
+  const ctx = canvas.getContext("2d");
+  ctx.scale(dpr, dpr);
+  ctx.clearRect(0, 0, w, h);
+  const d = ANALYSIS_DATA;
+  if (!d) return;
+  const tr = d["月度保费趋势"];
+  if (!tr || tr.length < 3) return;
+  const rows = tr.slice(1).filter(r => r[0] && r[0] !== "合计");
+  if (rows.length === 0) return;
+  const pad = { t: 20, r: 20, b: 40, l: 60 };
+  const cw = w - pad.l - pad.r, ch = h - pad.t - pad.b;
+  const series = [{ label:"2025年保费", key:1, color:"#94a3b8" }, { label:"2026年保费", key:3, color:"#2563eb" }];
+  const maxVal = Math.max(...rows.map(r => Math.max(parseFloat(String(r[1]).replace(/,/g, "") || 0), parseFloat(String(r[3]).replace(/,/g, "") || 0)))) * 1.2 || 1;
+  ctx.strokeStyle = "#e2e8f0"; ctx.lineWidth = 1;
+  ctx.font = "10px sans-serif"; ctx.fillStyle = "#94a3b8"; ctx.textAlign = "right"; ctx.textBaseline = "middle";
+  for (let i = 0; i <= 5; i++) {
+    const y = pad.t + (ch / 5) * i;
+    ctx.beginPath(); ctx.moveTo(pad.l, y); ctx.lineTo(w - pad.r, y); ctx.stroke();
+    ctx.fillText("\u00a5" + Math.round(maxVal * (1 - i / 5)).toLocaleString(), pad.l - 6, y);
+  }
+  ctx.textAlign = "center"; ctx.textBaseline = "top";
+  ctx.fillStyle = "#475569"; ctx.font = "11px sans-serif";
+  rows.forEach((r, i) => { ctx.fillText(r[0] + "月", pad.l + (cw / (rows.length - 1)) * i, h - pad.b + 6); });
+  series.forEach(s => {
+    ctx.strokeStyle = s.color; ctx.lineWidth = 2; ctx.beginPath();
+    rows.forEach((r, i) => {
+      const x = pad.l + (cw / (rows.length - 1)) * i;
+      const val = parseFloat(String(r[s.key]).replace(/,/g, "") || 0);
+      const y = pad.t + ch - (val / maxVal) * ch;
+      i === 0 ? ctx.moveTo(x, y) : ctx.lineTo(x, y);
+    });
+    ctx.stroke();
+  });
+  let lx = w - 200, ly = 14;
+  ctx.textAlign = "left"; ctx.textBaseline = "middle"; ctx.font = "11px sans-serif";
+  series.forEach(s => { ctx.fillStyle = s.color; ctx.fillRect(lx, ly - 5, 12, 10); ctx.fillStyle = "#475569"; ctx.fillText(s.label, lx + 16, ly); lx += 90; });
+}
+function populateSelects() {
+  document.querySelectorAll("select[id$=GroupFilter], select[id$=Group]").forEach(el => {
+    const current = el.value;
+    el.innerHTML = '<option value="all">全部客群</option>' + state.groups.map(g => '<option value="' + g + '">' + g + '</option>').join("");
+    if (current && state.groups.includes(current)) el.value = current;
+  });
+}
+function renderVisitList() {
+  const search = (document.getElementById("visitSearch").value || "").toLowerCase();
+  const filter = document.getElementById("visitFilter").value;
+  const groupFilter = document.getElementById("visitGroupFilter").value;
+  const today = new Date().toISOString().slice(0, 10);
+  const tv = state.visits.filter(v => v.date === today).length;
+  const pl = state.visits.filter(v => v.status === "计划中").length;
+  const dn = state.visits.filter(v => v.status === "已拜访").length;
+  document.getElementById("visitKpi").innerHTML =
+    '<div class="kpi-item"><div class="bar-top" style="background:var(--blue)"></div><div class="lbl">今日拜访</div><div class="val">' + tv + '</div><div class="sub">全部 ' + state.visits.length + '</div></div>' +
+    '<div class="kpi-item"><div class="bar-top" style="background:var(--amber)"></div><div class="lbl">计划中</div><div class="val">' + pl + '</div><div class="sub">待执行</div></div>' +
+    '<div class="kpi-item"><div class="bar-top" style="background:var(--emerald)"></div><div class="lbl">已完成</div><div class="val">' + dn + '</div><div class="sub">转化率 ' + (dn ? (dn / state.visits.length * 100).toFixed(1) : 0) + '%</div></div>';
+  const list = state.visits.filter(v => {
+    if (filter !== "all" && v.status !== filter) return false;
+    if (groupFilter && groupFilter !== "all" && v.group !== groupFilter) return false;
+    if (search && !v.customer.toLowerCase().includes(search) && !(v.person || "").toLowerCase().includes(search)) return false;
+    return true;
+  });
+  const cols = '<thead><tr><th>客户名称</th><th>拜访人</th><th>客群</th><th>日期</th><th>内容</th><th>状态</th><th>意向度</th><th>操作</th></tr></thead>';
+  if (list.length === 0) {
+    document.getElementById("visitTable").innerHTML = cols + '<tbody><tr><td colspan="8" style="text-align:center;color:#94a3b8;padding:24px;font-size:13px">暂无拜访记录</td></tr></tbody>';
+    return;
+  }
+  document.getElementById("visitTable").innerHTML = cols + '<tbody>' + list.sort((a, b) => a.date > b.date ? -1 : 1).map(v => {
+    const sc = v.status === "已拜访" ? "status-active" : v.status === "计划中" ? "status-pending" : "status-lost";
+    const ic = v.interest === "高" ? "status-active" : "status-pending";
+    return '<tr><td><strong>' + v.customer + '</strong></td><td>' + v.person + '</td>' +
+      '<td><span class="group-tag group-' + v.group + '">' + v.group + '</span></td>' +
+      '<td>' + v.date + '</td><td style="max-width:120px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">' + (v.content || "-") + '</td>' +
+      '<td><span class="status ' + sc + '">' + v.status + '</span></td>' +
+      '<td><span class="status ' + ic + '">' + (v.interest || "中") + '</span></td>' +
+      '<td class="actions" style="display:flex;gap:4px"><button class="btn btn-sm btn-outline" onclick="editVisit(\'' + v.id + '\')">编辑</button>' +
+      '<button class="btn btn-sm btn-outline" onclick="deleteVisit(\'' + v.id + '\')" style="color:var(--rose)">删除</button></td></tr>';
+  }).join("") + '</tbody>';
+}
+function openVisitForm(d) {
+  state.editId = d ? d.id : null;
+  document.getElementById("visitFormTitle").textContent = d ? "编辑拜访" : "新增拜访";
+  document.getElementById("vCustomer").value = d ? d.customer : "";
+  document.getElementById("vPerson").value = d ? d.person : "";
+  document.getElementById("vGroup").value = d ? d.group : state.activeGroup;
+  document.getElementById("vDate").value = d ? d.date : new Date().toISOString().slice(0, 10);
+  document.getElementById("vContent").value = d ? d.content : "";
+  document.getElementById("vStatus").value = d ? d.status : "计划中";
+  document.getElementById("vInterest").value = d ? d.interest : "中";
+  openModal("visitModal");
+}
+function saveVisit() {
+  const customer = document.getElementById("vCustomer").value.trim();
+  if (!customer) { alert("请输入客户名称"); return; }
+  const data = {
+    customer: customer,
+    person: document.getElementById("vPerson").value.trim(),
+    group: document.getElementById("vGroup").value,
+    date: document.getElementById("vDate").value,
+    content: document.getElementById("vContent").value.trim(),
+    status: document.getElementById("vStatus").value,
+    interest: document.getElementById("vInterest").value
+  };
+  if (state.editId) {
+    const idx = state.visits.findIndex(v => v.id === state.editId);
+    if (idx >= 0) state.visits[idx] = { ...state.visits[idx], ...data };
+  } else {
+    data.id = "v_" + Date.now() + "_" + Math.random().toString(36).slice(2, 6);
+    data.createdAt = Date.now();
+    state.visits.push(data);
+  }
+  saveState(); closeModal("visitModal"); renderVisitList(); renderTeamKpi(); drawTeamBarChart();
+}
+function editVisit(id) { const d = state.visits.find(v => v.id === id); if (d) openVisitForm(d); }
+function deleteVisit(id) { state.visits = state.visits.filter(v => v.id !== id); saveState(); renderVisitList(); }
+function renderLeadList() {
+  const search = (document.getElementById("leadSearch").value || "").toLowerCase();
+  const stage = document.getElementById("leadStageFilter").value;
+  const gf = document.getElementById("leadGroupFilter").value;
+  const list = state.leads.filter(l => {
+    if (stage !== "all" && l.stage !== stage) return false;
+    if (gf && gf !== "all" && l.group !== gf) return false;
+    if (search && !l.name.toLowerCase().includes(search)) return false;
+    return true;
+  });
+  document.getElementById("leadCount").textContent = state.leads.length;
+  const stages = ["初步接触","需求分析","方案报价","跟进中","即将成交","已成交","已流失"];
+  document.getElementById("leadPipeline").innerHTML = stages.map(s => {
+    const cnt = state.leads.filter(l => l.stage === s).length;
+    const color = s === "已成交" ? "var(--emerald)" : s === "已流失" ? "var(--rose)" : "var(--blue)";
+    return '<div style="flex:1;min-width:80px;text-align:center;padding:8px 6px;background:var(--slate-50);border-radius:6px;font-size:11px"><div style="font-weight:700;font-size:18px;color:' + color + '">' + cnt + '</div><div style="color:var(--slate-500);margin-top:2px">' + s + '</div></div>';
+  }).join("");
+  const cols = '<thead><tr><th>客户名称</th><th>联系人</th><th>电话</th><th>客群</th><th>意向险种</th><th>预计保费</th><th>阶段</th><th>操作</th></tr></thead>';
+  if (list.length === 0) {
+    document.getElementById("leadTable").innerHTML = cols + '<tbody><tr><td colspan="8" style="text-align:center;color:#94a3b8;padding:24px;font-size:13px">暂无意向客户</td></tr></tbody>';
+    return;
+  }
+  document.getElementById("leadTable").innerHTML = cols + '<tbody>' + list.sort((a, b) => b.createdAt - a.createdAt).map(l => {
+    const sc = l.stage === "已成交" ? "status-active" : l.stage === "已流失" ? "status-lost" : l.stage === "即将成交" ? "status-done" : "status-pending";
+    return '<tr><td><strong>' + l.name + '</strong></td>' +
+      '<td>' + (l.contact || "-") + '</td><td>' + (l.phone || "-") + '</td>' +
+      '<td><span class="group-tag group-' + l.group + '">' + l.group + '</span></td>' +
+      '<td>' + (l.product || "-") + '</td>' +
+      '<td class="num">' + (l.amount ? "¥" + l.amount.toLocaleString() : "-") + '</td>' +
+      '<td><span class="status ' + sc + '">' + l.stage + '</span></td>' +
+      '<td class="actions" style="display:flex;gap:4px"><button class="btn btn-sm btn-outline" onclick="editLead(\'' + l.id + '\')">编辑</button>' +
+      '<button class="btn btn-sm btn-outline" onclick="deleteLead(\'' + l.id + '\')" style="color:var(--rose)">删除</button></td></tr>';
+  }).join("") + '</tbody>';
+}
+function openLeadForm(d) {
+  state.editId = d ? d.id : null;
+  document.getElementById("leadFormTitle").textContent = d ? "编辑意向客户" : "新增意向客户";
+  document.getElementById("lName").value = d ? d.name : "";
+  document.getElementById("lContact").value = d ? d.contact : "";
+  document.getElementById("lPhone").value = d ? d.phone : "";
+  document.getElementById("lGroup").value = d ? d.group : state.activeGroup;
+  document.getElementById("lProduct").value = d ? d.product : "";
+  document.getElementById("lAmount").value = d ? d.amount : "";
+  document.getElementById("lStage").value = d ? d.stage : "初步接触";
+  document.getElementById("lNote").value = d ? d.note : "";
+  openModal("leadModal");
+}
+function saveLead() {
+  const name = document.getElementById("lName").value.trim();
+  if (!name) { alert("请输入客户名称"); return; }
+  const data = {
+    name: name,
+    contact: document.getElementById("lContact").value.trim(),
+    phone: document.getElementById("lPhone").value.trim(),
+    group: document.getElementById("lGroup").value,
+    product: document.getElementById("lProduct").value.trim(),
+    amount: parseFloat(document.getElementById("lAmount").value) || 0,
+    stage: document.getElementById("lStage").value,
+    note: document.getElementById("lNote").value.trim()
+  };
+  if (state.editId) {
+    const idx = state.leads.findIndex(l => l.id === state.editId);
+    if (idx >= 0) state.leads[idx] = { ...state.leads[idx], ...data };
+  } else {
+    data.id = "l_" + Date.now() + "_" + Math.random().toString(36).slice(2, 6);
+    data.createdAt = Date.now();
+    state.leads.push(data);
+  }
+  saveState(); closeModal("leadModal"); renderLeadList();
+}
+function editLead(id) { const d = state.leads.find(l => l.id === id); if (d) openLeadForm(d); }
+function deleteLead(id) { state.leads = state.leads.filter(l => l.id !== id); saveState(); renderLeadList(); }
+function renderCustomerList() {
+  const search = (document.getElementById("customerSearch").value || "").toLowerCase();
+  const gf = document.getElementById("customerGroupFilter").value;
+  const list = state.customers.filter(c => {
+    if (gf && gf !== "all" && c.group !== gf) return false;
+    if (search && !c.name.toLowerCase().includes(search) && !(c.contact || "").toLowerCase().includes(search)) return false;
+    return true;
+  });
+  document.getElementById("customerCount").textContent = state.customers.length;
+  const cols = '<thead><tr><th>客户名称</th><th>联系人</th><th>电话</th><th>客群</th><th>地址</th><th>标签</th><th>操作</th></tr></thead>';
+  if (list.length === 0) {
+    document.getElementById("customerTable").innerHTML = cols + '<tbody><tr><td colspan="7" style="text-align:center;color:#94a3b8;padding:24px;font-size:13px">暂无客户</td></tr></tbody>';
+    return;
+  }
+  document.getElementById("customerTable").innerHTML = cols + '<tbody>' + list.sort((a, b) => b.createdAt - a.createdAt).map(c => {
+    return '<tr><td><strong>' + c.name + '</strong></td>' +
+      '<td>' + (c.contact || "-") + '</td><td>' + (c.phone || "-") + '</td>' +
+      '<td><span class="group-tag group-' + c.group + '">' + c.group + '</span></td>' +
+      '<td style="max-width:150px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">' + (c.address || "-") + '</td>' +
+      '<td>' + (c.tag ? '<span class="status status-done">' + c.tag + '</span>' : "-") + '</td>' +
+      '<td class="actions" style="display:flex;gap:4px"><button class="btn btn-sm btn-outline" onclick="editCustomer(\'' + c.id + '\')">编辑</button>' +
+      '<button class="btn btn-sm btn-outline" onclick="deleteCustomer(\'' + c.id + '\')" style="color:var(--rose)">删除</button></td></tr>';
+  }).join("") + '</tbody>';
+}
+function openCustomerForm(d) {
+  state.editId = d ? d.id : null;
+  document.getElementById("customerFormTitle").textContent = d ? "编辑客户" : "新增客户";
+  document.getElementById("cName").value = d ? d.name : "";
+  document.getElementById("cGroup").value = d ? d.group : state.activeGroup;
+  document.getElementById("cContact").value = d ? d.contact : "";
+  document.getElementById("cPhone").value = d ? d.phone : "";
+  document.getElementById("cAddress").value = d ? d.address : "";
+  document.getElementById("cTag").value = d ? d.tag : "";
+  document.getElementById("cNote").value = d ? d.note : "";
+  openModal("customerModal");
+}
+function saveCustomer() {
+  const name = document.getElementById("cName").value.trim();
+  if (!name) { alert("请输入客户名称"); return; }
+  const data = {
+    name: name,
+    group: document.getElementById("cGroup").value,
+    contact: document.getElementById("cContact").value.trim(),
+    phone: document.getElementById("cPhone").value.trim(),
+    address: document.getElementById("cAddress").value.trim(),
+    tag: document.getElementById("cTag").value.trim(),
+    note: document.getElementById("cNote").value.trim()
+  };
+  if (state.editId) {
+    const idx = state.customers.findIndex(c => c.id === state.editId);
+    if (idx >= 0) state.customers[idx] = { ...state.customers[idx], ...data };
+  } else {
+    data.id = "c_" + Date.now() + "_" + Math.random().toString(36).slice(2, 6);
+    data.createdAt = Date.now();
+    state.customers.push(data);
+  }
+  saveState(); closeModal("customerModal"); renderCustomerList();
+}
+function editCustomer(id) { const d = state.customers.find(c => c.id === id); if (d) openCustomerForm(d); }
+function deleteCustomer(id) { state.customers = state.customers.filter(c => c.id !== id); saveState(); renderCustomerList(); }
+function renderTeamKpi() {
+  const tv = state.visits.length, tl = state.leads.length;
+  const cl = state.leads.filter(l => l.stage === "已成交").length;
+  const tc = state.customers.length;
+  document.getElementById("teamKpi").innerHTML =
+    '<div class="kpi-item"><div class="bar-top" style="background:var(--blue)"></div><div class="lbl">拜访总数</div><div class="val">' + tv + '</div><div class="sub">累计拜访</div></div>' +
+    '<div class="kpi-item"><div class="bar-top" style="background:var(--teal)"></div><div class="lbl">意向客户</div><div class="val">' + tl + '</div><div class="sub">跟进中</div></div>' +
+    '<div class="kpi-item"><div class="bar-top" style="background:var(--emerald)"></div><div class="lbl">已成交</div><div class="val">' + cl + '</div><div class="sub">转化率 ' + (tl ? (cl / tl * 100).toFixed(1) : 0) + '%</div></div>' +
+    '<div class="kpi-item"><div class="bar-top" style="background:var(--violet)"></div><div class="lbl">客户总数</div><div class="val">' + tc + '</div><div class="sub">累计客户</div></div>';
+}
+function drawTeamBarChart() {
+  const canvas = document.getElementById("teamBarChart");
+  if (!canvas) return;
+  const rect = canvas.parentElement.getBoundingClientRect();
+  const dpr = window.devicePixelRatio || 1;
+  const w = rect.width - 4, h = 260;
+  canvas.width = w * dpr; canvas.height = h * dpr;
+  canvas.style.width = w + "px"; canvas.style.height = h + "px";
+  const ctx = canvas.getContext("2d");
+  ctx.scale(dpr, dpr); ctx.clearRect(0, 0, w, h);
+  const groups = state.groups.filter(g =>
+    state.visits.some(v => v.group === g) ||
+    state.leads.some(l => l.group === g) ||
+    state.customers.some(c => c.group === g)
+  );
+  if (groups.length === 0) {
+    ctx.font = "14px sans-serif"; ctx.fillStyle = "#94a3b8";
+    ctx.textAlign = "center"; ctx.textBaseline = "middle";
+    ctx.fillText("暂无数据", w / 2, h / 2); return;
+  }
+  const pad = { t: 20, r: 20, b: 40, l: 50 };
+  const cw = w - pad.l - pad.r, ch = h - pad.t - pad.b;
+  const gap = cw / groups.length, barW = gap * 0.2;
+  const maxVal = Math.max(...groups.map(g =>
+    state.visits.filter(v => v.group === g).length +
+    state.leads.filter(l => l.group === g).length
+  )) * 1.3 || 1;
+  ctx.strokeStyle = "rgba(0,0,0,.04)"; ctx.font = "10px sans-serif";
+  ctx.fillStyle = "#94a3b8"; ctx.textAlign = "right"; ctx.textBaseline = "middle";
+  for (let i = 0; i <= 4; i++) {
+    const y = pad.t + (ch / 4) * i;
+    ctx.beginPath(); ctx.moveTo(pad.l, y); ctx.lineTo(w - pad.r, y); ctx.stroke();
+    ctx.fillText(Math.round(maxVal * (1 - i / 4)), pad.l - 6, y);
+  }
+  const colors = ["#2563eb","#0d9488","#d97706"];
+  groups.forEach((g, gi) => {
+    const vals = [
+      state.visits.filter(v => v.group === g).length,
+      state.leads.filter(l => l.group === g).length,
+      state.customers.filter(c => c.group === g).length
+    ];
+    const x = pad.l + gi * gap;
+    ctx.textAlign = "center"; ctx.textBaseline = "top";
+    ctx.font = "11px sans-serif"; ctx.fillStyle = "#475569";
+    ctx.fillText(g, x + gap / 2, h - pad.b + 6);
+    vals.forEach((v, vi) => {
+      const bh = (v / maxVal) * ch;
+      const bx = x + 4 + vi * barW;
+      ctx.fillStyle = colors[vi % colors.length];
+      ctx.fillRect(bx, pad.t + ch - bh, barW - 2, bh);
+      if (v > 0) {
+        ctx.fillStyle = colors[vi % colors.length];
+        ctx.font = "9px sans-serif"; ctx.textBaseline = "bottom";
+        ctx.fillText(v, bx + (barW - 2) / 2, pad.t + ch - bh - 3);
+      }
+    });
+  });
+  let lx = w - 150, ly = 12;
+  ctx.textAlign = "left"; ctx.textBaseline = "middle"; ctx.font = "11px sans-serif";
+  ["拜访","意向","客户"].forEach((l, i) => {
+    ctx.fillStyle = colors[i]; ctx.fillRect(lx, ly - 5, 10, 10);
+    ctx.fillStyle = "#475569"; ctx.fillText(l, lx + 14, ly + 1); lx += 50;
+  });
+}
+function updateTeamActions() {
+  const urgent = state.leads.filter(l => l.stage === "即将成交");
+  const pending = state.visits.filter(v => v.status === "计划中" && v.date <= new Date().toISOString().slice(0, 10));
+  const warm = state.leads.filter(l => l.stage === "需求分析" || l.stage === "方案报价");
+  const actions = [];
+  urgent.forEach(l => actions.push({ text: "[紧急跟进]" + l.name + " 即将成交，预计保费" + (l.amount ? "¥" + l.amount.toLocaleString() : "待确认"), level: 1 }));
+  pending.forEach(v => actions.push({ text: "[待拜访]" + v.customer + " - " + v.person + " (" + v.date + ")", level: 2 }));
+  warm.slice(0, 3).forEach(l => actions.push({ text: "[意向跟进]" + l.name + " 阶段:" + l.stage + "，险种:" + (l.product || "待确认"), level: 2 }));
+  const el = document.getElementById("teamActionList");
+  if (actions.length === 0) { el.innerHTML = '<div class="empty-state">暂无待办事项</div>'; return; }
+  el.innerHTML = actions.slice(0, 8).map(a =>
+    '<div style="display:flex;align-items:flex-start;gap:10px;padding:8px 0;border-bottom:1px solid var(--slate-100)">' +
+    '<span style="font-size:11px;font-weight:800;color:#fff;background:' + (a.level === 1 ? "var(--emerald)" : "var(--blue)") + ';border-radius:4px;padding:2px 8px;flex-shrink:0">P' + a.level + '</span>' +
+    '<span style="font-size:13px;color:var(--slate-600);line-height:1.5">' + a.text + '</span></div>'
+  ).join("");
+}
+function renderTeamRankings() {
+  const em = {};
+  state.visits.forEach(v => { const n = v.userName || v.person || "未知"; if (!em[n]) em[n] = { visits:0, leads:0, customers:0, won:0 }; em[n].visits++; });
+  state.leads.forEach(l => { const n = l.userName || "未知"; if (!em[n]) em[n] = { visits:0, leads:0, customers:0, won:0 }; em[n].leads++; if (l.stage === "已成交") em[n].won++; });
+  state.customers.forEach(c => { const n = c.userName || "未知"; if (!em[n]) em[n] = { visits:0, leads:0, customers:0, won:0 }; em[n].customers++; });
+  var employees = Object.keys(em).map(name => { var d = em[name]; return { name: name, visits: d.visits, leads: d.leads, customers: d.customers, won: d.won }; });
+  employees.sort((a, b) => (b.visits + b.leads) - (a.visits + a.leads));
+  var table = document.getElementById("teamRankTable");
+  if (employees.length === 0) {
+    table.innerHTML = '<tr><td style="text-align:center;color:#94a3b8;padding:16px;font-size:12px">暂无员工数据</td></tr>';
+    return;
+  }
+  var html = '<thead><tr><th>排名</th><th>姓名</th><th>拜访</th><th>意向</th><th>成交</th><th>客户</th><th>综合</th></tr></thead><tbody>';
+  for (var i = 0; i < employees.length; i++) {
+    var e = employees[i];
+    var score = e.visits + e.leads * 2 + e.won * 5 + e.customers;
+    html += '<tr><td style="font-weight:700;color:' + (i < 3 ? "var(--blue)" : "var(--slate-500)") + '">' + (i + 1) + '</td>';
+    html += '<td><strong>' + e.name + '</strong></td><td class="num">' + e.visits + '</td>';
+    html += '<td class="num">' + e.leads + '</td><td class="num" style="color:var(--emerald);font-weight:600">' + e.won + '</td>';
+    html += '<td class="num">' + e.customers + '</td><td class="num" style="font-weight:700;color:var(--blue)">' + score + '</td></tr>';
+  }
+  html += '</tbody>'; table.innerHTML = html;
+}
+function openModal(id) { document.getElementById(id).classList.add("open"); }
+function closeModal(id) { document.getElementById(id).classList.remove("open"); }
+function showDataImport() { openModal("importModal"); }
+function showMultiImport() { document.getElementById("multiImportFile").click(); }
+function doImport() {
+  const file = document.getElementById("importFile").files[0];
+  if (!file) { alert("请选择文件"); return; }
+  const reader = new FileReader();
+  reader.onload = function(e) {
+    try {
+      const data = JSON.parse(e.target.result);
+      const mode = document.getElementById("importMode").value;
+      if (mode === "overwrite") {
+        state.groups = data.groups || [...DEFAULT_GROUPS];
+        state.visits = data.visits || [];
+        state.leads = data.leads || [];
+        state.customers = data.customers || [];
+        if (data.analysisData) window.ANALYSIS_DATA = data.analysisData;
+      } else {
+        state.groups = [...new Set([...state.groups, ...(data.groups || [])])];
+        state.visits = [...state.visits, ...(data.visits || []).filter(v => !state.visits.find(x => x.id === v.id))];
+        state.leads = [...state.leads, ...(data.leads || []).filter(l => !state.leads.find(x => x.id === l.id))];
+        state.customers = [...state.customers, ...(data.customers || []).filter(c => !state.customers.find(x => x.id === c.id))];
+      }
+      saveState();
+      closeModal("importModal");
+      renderAll();
+      alert("导入成功！");
+    } catch(err) {
+      alert("文件格式错误：" + err.message);
+    }
+  };
+  reader.readAsText(file);
+}
+function doMultiImport() {
+  const files = document.getElementById("multiImportFile").files;
+  if (files.length === 0) { alert("请选择员工导出的JSON文件"); return; }
+  let totalVisits = 0, totalLeads = 0, totalCustomers = 0, totalUsers = 0, mergedUsers = [];
+  for (const file of files) {
+    const reader = new FileReaderSync();
+    try {
+      const data = JSON.parse(reader.readAsText(file));
+      const userName = data.user ? data.user.name : file.name.replace(/.json$/, "").split("_")[0];
+      if (!mergedUsers.includes(userName)) { mergedUsers.push(userName); totalUsers++; }
+      if (data.visits) {
+        const old = state.visits.length;
+        data.visits.forEach(v => { if (!v.userName) v.userName = userName; });
+        state.visits = [...state.visits, ...data.visits.filter(v => !state.visits.find(x => x.id === v.id))];
+        totalVisits += state.visits.length - old;
+      }
+      if (data.leads) {
+        const old = state.leads.length;
+        data.leads.forEach(l => { if (!l.userName) l.userName = userName; });
+        state.leads = [...state.leads, ...data.leads.filter(l => !state.leads.find(x => x.id === l.id))];
+        totalLeads += state.leads.length - old;
+      }
+      if (data.customers) {
+        const old = state.customers.length;
+        data.customers.forEach(c => { if (!c.userName) c.userName = userName; });
+        state.customers = [...state.customers, ...data.customers.filter(c => !state.customers.find(x => x.id === c.id))];
+        totalCustomers += state.customers.length - old;
+      }
+    } catch(e) {
+      alert("文件 " + file.name + " 格式错误：" + e.message);
+    }
+  }
+  saveState();
+  document.getElementById("multiImportResult").textContent = "成功导入 " + totalUsers + " 名员工的数据：" + totalVisits + " 条拜访记录、" + totalLeads + " 条意向客户、" + totalCustomers + " 个客户，来源：" + mergedUsers.join(", ");
+  renderAll();
+}
+function exportAllData() {
+  const data = {
+    exportTime: new Date().toISOString(),
+    groups: state.groups,
+    visits: state.visits,
+    leads: state.leads,
+    customers: state.customers,
+    activeGroup: state.activeGroup
+  };
+  const blob = new Blob([JSON.stringify(data, null, 2)], { type: "application/json" });
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement("a");
+  a.href = url;
+  a.download = "渠道销售数据_" + new Date().toISOString().slice(0, 10) + ".json";
+  document.body.appendChild(a); a.click();
+  document.body.removeChild(a);
+  URL.revokeObjectURL(url);
+}
+function confirmClear() {
+  document.getElementById("confirmText").textContent = "确定要清空所有数据吗？包括拜访记录、意向客户和客户信息。此操作不可恢复！";
+  document.getElementById("confirmBtn").onclick = function() {
+    state.visits = []; state.leads = []; state.customers = [];
+    state.groups = [...DEFAULT_GROUPS];
+    saveState(); closeModal("confirmModal"); renderAll();
+  };
+  openModal("confirmModal");
+}
+document.addEventListener("DOMContentLoaded", init);
+window.addEventListener("resize", function() {
+  clearTimeout(window._resizeTimer);
+  window._resizeTimer = setTimeout(function() {
+    drawPie(); drawTrend(); drawTeamBarChart();
+  }, 150);
+});
+</script>
+</body>
+</html>
