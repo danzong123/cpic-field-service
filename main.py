@@ -140,10 +140,19 @@ MANIFEST_JSON = {
 }
 
 SW_JS = """self.addEventListener('install', e => { self.skipWaiting(); });
-self.addEventListener('activate', e => { e.waitUntil(clients.claim()); });
+self.addEventListener('activate', e => {
+  e.waitUntil(caches.keys().then(ks => Promise.all(ks.map(k => caches.delete(k))).then(() => clients.claim())));
+});
 self.addEventListener('fetch', e => {
-  if (e.request.url.includes('/api/')) return;
-  e.respondWith(caches.match(e.request).then(r => r || fetch(e.request)));
+  if (e.request.url.includes('/api/') || e.request.mode === 'navigate') return;
+  e.respondWith(
+    caches.open('v1').then(c =>
+      c.match(e.request).then(r => r || fetch(e.request).then(resp => {
+        if (resp.ok) c.put(e.request, resp.clone());
+        return resp;
+      }))
+    )
+  );
 });"""
 
 
@@ -489,6 +498,18 @@ def load_mobile_html():
 
     script_inject = """<script>
 window.API_BASE = "";
+window._serverOnline = false;
+
+async function checkServerStatus() {
+  if (!window.me) return;
+  try {
+    var r = await fetch(window.API_BASE + "/api/health", { signal: AbortSignal.timeout(4000) });
+    if (r.ok) { window._serverOnline = true; return; }
+  } catch (e) {}
+  window._serverOnline = false;
+}
+setInterval(checkServerStatus, 30000);
+
 
 async function syncToServer(){
   if(!window.me) return;
@@ -575,11 +596,7 @@ window.save = function(){
 
     html = html.replace("<script>", script_inject + "<script>", 1)
 
-    pwa_meta = """<link rel="manifest" href="/static/manifest.json">
-<meta name="apple-mobile-web-app-capable" content="yes">
-<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-<meta name="mobile-web-app-capable" content="yes">
-<script>
+    pwa_meta = """<script>
 if('serviceWorker' in navigator) {
   navigator.serviceWorker.register('/static/sw.js').catch(function(){});
 }
